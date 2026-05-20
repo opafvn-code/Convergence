@@ -195,8 +195,9 @@ namespace FadePlanet
                 }
 
                 Random rand = new Random();
-                // Spawn enemies further right (closer to player's side, away from boss)
-                int x = rand.Next(700, 1100);
+                // Spawn enemies further left (away from boss who is on the right)
+                // Boss is at X=790, so spawn enemies between 100 and 600
+                int x = rand.Next(100, 600);
                 int y = rand.Next(150, 550);
                 Point spawnPos = new Point(x, y);
 

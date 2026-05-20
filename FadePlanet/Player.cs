@@ -790,7 +790,6 @@ namespace FadePlanet
 
                 if (selectedSlot == InventorySlotPotion)
                 {
-                    ApplyHeal();
                     TriggerHealAnimation();
                     return;
                 }

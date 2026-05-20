@@ -93,10 +93,23 @@ namespace FadePlanet
         {
             if (ProjType == ElementType.Fire && fireballSheet != null)
             {
-                // Draw animated fireball from spritesheet
+                // Calculate rotation angle based on direction
+                float angle = (float)(Math.Atan2(Direction.Y, Direction.X) * 180 / Math.PI);
+
+                // Save current state
+                GraphicsState state = g.Save();
+
+                // Move origin to center of projectile
+                g.TranslateTransform(Position.X + ObjSize.Width / 2, Position.Y + ObjSize.Height / 2);
+                g.RotateTransform(angle);
+
+                // Draw animated fireball from spritesheet (centered at origin)
                 Rectangle srcRect = new Rectangle(animFrame * FireballFrameWidth, 0, FireballFrameWidth, FireballFrameHeight);
-                RectangleF destRect = new RectangleF(Position.X, Position.Y, ObjSize.Width, ObjSize.Height);
+                RectangleF destRect = new RectangleF(-ObjSize.Width / 2, -ObjSize.Height / 2, ObjSize.Width, ObjSize.Height);
                 g.DrawImage(fireballSheet, destRect, srcRect, GraphicsUnit.Pixel);
+
+                // Restore state
+                g.Restore(state);
             }
             else
             {
