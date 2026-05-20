@@ -56,8 +56,9 @@ namespace FadePlanet
         #region Health Bar Graphics
         private Image healthBarGraphic;
         private Image healthBarFill;
-        private const int HealthBarWidth = 400;
-        private const int HealthBarHeight = 30;
+        // Image dimensions: 320x55 pixels
+        private const int HealthBarWidth = 320;
+        private const int HealthBarHeight = 55;
         #endregion
 
         public Boss(Point pos, Size size, ObjectType type = ObjectType.Boss) : base(pos, size, type)
@@ -197,7 +198,8 @@ namespace FadePlanet
                 }
 
                 Random rand = new Random();
-                int x = rand.Next(100, 1100);
+                // Spawn enemies further right (closer to player's side, away from boss)
+                int x = rand.Next(700, 1100);
                 int y = rand.Next(150, 550);
                 Point spawnPos = new Point(x, y);
 
@@ -320,27 +322,26 @@ namespace FadePlanet
 
         private void DrawHealthBar(Graphics g)
         {
-            float barX = Position.X + (ObjSize.Width / 2f) - (HealthBarWidth / 2f);
-            float barY = Position.Y - HealthBarHeight - 20;
+            if (healthBarGraphic == null || healthBarFill == null) return;
 
-            // Draw frame
-            if (healthBarGraphic != null)
+            // Calculate bar position (centered above boss)
+            float barX = Position.X + (ObjSize.Width / 2f) - (healthBarGraphic.Width / 2f);
+            float barY = Position.Y - healthBarGraphic.Height - 20;
+
+            // Calculate health percentage
+            float healthPercent = (float)Health / MaxHealth;
+            float fillWidth = healthBarGraphic.Width * healthPercent;
+
+            // Draw the health fill first (behind the frame)
+            if (fillWidth > 0)
             {
-                g.DrawImage(healthBarGraphic, barX, barY, HealthBarWidth, HealthBarHeight);
+                RectangleF fillDestRect = new RectangleF(barX, barY, fillWidth, healthBarGraphic.Height);
+                RectangleF fillSrcRect = new RectangleF(0, 0, healthBarFill.Width * healthPercent, healthBarFill.Height);
+                g.DrawImage(healthBarFill, fillDestRect, fillSrcRect, GraphicsUnit.Pixel);
             }
 
-            // Draw fill
-            if (healthBarFill != null)
-            {
-                float healthPercent = (float)Health / MaxHealth;
-                float fillWidth = HealthBarWidth * healthPercent;
-
-                if (fillWidth > 0)
-                {
-                    RectangleF fillRect = new RectangleF(barX, barY, fillWidth, HealthBarHeight);
-                    g.DrawImage(healthBarFill, fillRect);
-                }
-            }
+            // Draw the frame graphic on top
+            g.DrawImage(healthBarGraphic, barX, barY, healthBarGraphic.Width, healthBarGraphic.Height);
         }
     }
 }
