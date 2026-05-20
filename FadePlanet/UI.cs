@@ -326,10 +326,9 @@ namespace FadePlanet
             int scaledHealthGraphicWidth = hGraphic.Width * scale;
             int scaledHealthGraphicHeight = hGraphic.Height * scale;
 
-            int currentHealthWidth = (int)(scaledHealthBarWidth * healthPercent);
-
-            if (currentHealthWidth > 0)
+            if (healthPercent > 0)
             {
+                int currentHealthWidth = (int)(scaledHealthBarWidth * healthPercent);
                 Rectangle destRect = new Rectangle(healthX, healthY, currentHealthWidth, scaledHealthBarHeight);
                 Rectangle srcRect = new Rectangle(0, 0, (int)(hBar.Width * healthPercent), hBar.Height);
                 g.DrawImage(hBar, destRect, srcRect, GraphicsUnit.Pixel);
@@ -350,10 +349,9 @@ namespace FadePlanet
             int scaledStaminaGraphicWidth = sGraphic.Width * scale;
             int scaledStaminaGraphicHeight = sGraphic.Height * scale;
 
-            int currentStaminaWidth = (int)(scaledStaminaBarWidth * staminaPercent);
-
-            if (currentStaminaWidth > 0)
+            if (staminaPercent > 0)
             {
+                int currentStaminaWidth = (int)(scaledStaminaBarWidth * staminaPercent);
                 Rectangle destRectStamina = new Rectangle(staminaX, staminaY, currentStaminaWidth, scaledStaminaBarHeight);
                 Rectangle srcRectStamina = new Rectangle(0, 0, (int)(sBar.Width * staminaPercent), sBar.Height);
                 g.DrawImage(sBar, destRectStamina, srcRectStamina, GraphicsUnit.Pixel);

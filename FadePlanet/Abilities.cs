@@ -67,7 +67,7 @@ namespace FadePlanet
                 if (dir.Y < 0) posY = player.Position.Y;
                 if (dir.Y > 0) posY = player.Position.Y + player.ObjSize.Height;
 
-                new Projectile(new PointF(posX, posY), new SizeF(32, 32), ElementType.Fire, dir);
+                new Projectile(new PointF(posX, posY), new SizeF(64, 64), ElementType.Fire, dir);
             }
         }
         public class WaterScroll : ScrollBase

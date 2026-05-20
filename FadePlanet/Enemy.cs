@@ -51,10 +51,8 @@ namespace FadePlanet
         #region Stats
         public EnemyType EnemyType { get; private set; }
         public ElementType ElementType { get; private set; }
-        public int MaxHealth { get; private set; }
-        public int Health { get; private set; }
-        private int Damage;
-        private float WalkSpeed;
+        public int Damage { get; protected set; }
+        public float WalkSpeed { get; protected set; }
         #endregion
 
         #region State
@@ -390,28 +388,23 @@ namespace FadePlanet
         // =====================================================================
         // DAMAGE & KNOCKBACK
         // =====================================================================
-        public void TakeDamage(int damage, PointF sourcePosition)
+        public virtual void TakeDamage(int damage, PointF sourcePosition)
         {
             TakeDamage(damage, sourcePosition, EnemyKnockbackDistance);
         }
 
-        public void TakeDamage(int damage, PointF sourcePosition, float knockbackDistance)
+        public virtual void TakeDamage(int damage, PointF sourcePosition, float knockbackDistance)
         {
-            Health -= damage;
+            base.TakeDamage(damage);
 
-            if (Health <= 0)
+            if (Health > 0)
             {
-                Health = 0;
-                OnDeath();
-                return;
+                knockbackDirection = GetHorizontalDirection(Position.X - sourcePosition.X);
+                knockbackRemaining = knockbackDistance;
+                animFrame = 0;
+                animTimer = 0;
+                State = EnemyState.Knockback;
             }
-
-            knockbackDirection = GetHorizontalDirection(Position.X - sourcePosition.X);
-
-            knockbackRemaining = knockbackDistance;
-            animFrame = 0;
-            animTimer = 0;
-            State = EnemyState.Knockback;
         }
 
         public override void OnDeath()
@@ -431,8 +424,8 @@ namespace FadePlanet
 
         public void SetMaxHealth(int newMaxHealth)
         {
-            MaxHealth = newMaxHealth;
-            Health = newMaxHealth;
+            base.MaxHealth = newMaxHealth;
+            base.Health = newMaxHealth;
         }
 
         // =====================================================================

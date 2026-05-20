@@ -41,11 +41,7 @@ namespace FadePlanet
         public const int InventorySlotPotion = 5;
 
         #region Player Stats
-        public int Health { get; private set; } = 100;
-        public int MaxHealth { get; private set; } = 100;
-
         public float Stamina { get; private set; } = 100f;
-       
         public float MaxStamina { get; private set; } = 100f;
 
         
@@ -190,6 +186,8 @@ namespace FadePlanet
 
         public Player(Point pos, Size size) : base(pos, size, ObjectType.Player)
         {
+            MaxHealth = 100;
+            Health = 100;
             CurrentElement = _abilities[Keys.D4];
             ObjSize = new Size(224, 224);
             LoadImages();
@@ -488,6 +486,7 @@ namespace FadePlanet
                         IsPlayingHeal = false;
                         healFrameIndex = 0;
                         currentImage = isFacingLeft ? idleL1 : idleR1;
+                        ApplyHeal();
                     }
                 }
 
@@ -861,16 +860,12 @@ namespace FadePlanet
         #endregion
 
         #region Damage/Death Functions
-        public void TakeDamage(int damage)
+        public override void OnDeath()
         {
-            Health -= damage;
-            if (Health <= 0)
-            {
-                Health = 0;
-                OnDeath();
-            }
+            // Reset game or handle player death
+            MessageBox.Show("Game Over! You have fallen.");
+            Application.Restart();
         }
-        public new void OnDeath() { }
         #endregion
 
         

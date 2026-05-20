@@ -47,6 +47,10 @@ namespace FadePlanet
         public SizeF ObjSize { get; set; }
         public ObjectType Type { get; set; }
 
+        // Unified Health System
+        public virtual int Health { get; protected set; }
+        public virtual int MaxHealth { get; protected set; }
+
         public RectangleF Bounds => new RectangleF(Position, ObjSize);
 
         // Hitbox — overridden in Player with more precise dimensions
@@ -73,7 +77,15 @@ namespace FadePlanet
 
         public virtual void Draw(Graphics g) { }
         public virtual void OnInteract(Player player) { }
-        public virtual void OnHit(int damage) { }
+        public virtual void TakeDamage(int damage)
+        {
+            Health -= damage;
+            if (Health <= 0)
+            {
+                Health = 0;
+                OnDeath();
+            }
+        }
         public virtual void OnDeath() { }
     }
 }

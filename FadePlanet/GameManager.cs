@@ -59,10 +59,6 @@ namespace FadePlanet
                     CurrentRealm = RealmType.Boss;
                     LoadRoom_Six();
                     break;
-                case RealmType.Boss:
-                    CurrentRealm = RealmType.Victory;
-                    ShowVictoryScreen();
-                    break;
             }
             ResetRealmState();
         }
@@ -119,10 +115,12 @@ namespace FadePlanet
             AdvanceToNextRealm();
         }
 
-        private static void ShowVictoryScreen()
+        public static void TriggerVictory()
         {
+            if (GameWon) return;
             GameWon = true;
             VictoryFadeAlpha = 0f;
+            CurrentRealm = RealmType.Victory;
         }
 
         public static void UpdateVictoryFade()

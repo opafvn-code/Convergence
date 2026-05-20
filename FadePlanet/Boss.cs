@@ -9,11 +9,10 @@ namespace FadePlanet
 {
     public enum BossPhase { Air, Water, Earth, Fire, Final }
 
-    internal class Boss : WorldObject
+    internal class Boss : Enemy
     {
         #region Boss Stats
-        private const int MaxHealth = 2000;
-        public int Health { get; private set; } = MaxHealth;
+        private const int BossMaxHealth = 2000;
         private const int EnemiesPerPhase = 10;
         private int EnemiesDefeatedInPhase = 0;
 
@@ -61,8 +60,10 @@ namespace FadePlanet
         private const int HealthBarHeight = 55;
         #endregion
 
-        public Boss(Point pos, Size size, ObjectType type = ObjectType.Boss) : base(pos, size, type)
+        public Boss(Point pos, Size size, ObjectType type = ObjectType.Boss) : base(pos, size, EnemyType.Air)
         {
+            Type = type; // Ensure type is Boss even though we call Enemy constructor
+            SetMaxHealth(BossMaxHealth);
             // Upscale boss 2x for Cuphead-style appearance
             ObjSize = new Size(size.Width * 1, size.Height * 1);
             LoadImages();
@@ -88,9 +89,9 @@ namespace FadePlanet
             }
         }
 
-        public void Update(Player player)
+        public override void Update(Player player)
         {
-            // Boss is stationary - no movement
+            // Boss is stationary - no movement from Enemy.Update
 
             // Update animation
             UpdateAnimation();
@@ -111,11 +112,7 @@ namespace FadePlanet
                 HandlePhaseEnemySpawning();
             }
 
-            // Handle stun
-            if (stunTimer > 0)
-            {
-                stunTimer -= 16;
-            }
+            // Stun immunity - stunTimer logic removed
         }
 
         private void UpdateAnimation()
@@ -265,34 +262,31 @@ namespace FadePlanet
             }
         }
 
-        public void TakeDamage(int damage)
+        public override void TakeDamage(int damage, PointF sourcePosition)
         {
             if (CurrentPhase != BossPhase.Final)
                 return; // Can only damage boss directly in final phase
 
-            Health -= damage;
-            if (Health <= 0)
-            {
-                Health = 0;
-                OnDeath();
-            }
+            base.TakeDamage(damage); // Use WorldObject.TakeDamage via base.base? No, base.TakeDamage in Enemy calls base.TakeDamage in WorldObject.
         }
 
-        public void ApplyStun(int durationMs)
+        public override void TakeDamage(int damage, PointF sourcePosition, float knockbackDistance)
         {
-            stunTimer = durationMs;
+            if (CurrentPhase != BossPhase.Final)
+                return;
+
+            base.TakeDamage(damage);
         }
 
-        // Boss is a statue - no knockback when attacked
-        public void ApplyKnockback(PointF sourcePosition, float distance)
+        public override void ApplyStun(int durationMs)
         {
-            // Do nothing - boss is stationary
+            // Boss is immune to stun
         }
 
         public override void OnDeath()
         {
             GameManager.CurPlayer.AddCurrency(50);
-            GameManager.OnEnemyDefeated();
+            GameManager.TriggerVictory();
             GameManager.DespawnObject(this);
         }
 
@@ -330,12 +324,12 @@ namespace FadePlanet
 
             // Calculate health percentage
             float healthPercent = (float)Health / MaxHealth;
-            float fillWidth = healthBarGraphic.Width * healthPercent;
 
-            // Draw the health fill first (behind the frame)
-            if (fillWidth > 0)
+            // Draw the health fill first (behind the frame) using clipping
+            if (healthPercent > 0)
             {
-                RectangleF fillDestRect = new RectangleF(barX, barY, fillWidth, healthBarGraphic.Height);
+                int currentFillWidth = (int)(healthBarGraphic.Width * healthPercent);
+                RectangleF fillDestRect = new RectangleF(barX, barY, currentFillWidth, healthBarGraphic.Height);
                 RectangleF fillSrcRect = new RectangleF(0, 0, healthBarFill.Width * healthPercent, healthBarFill.Height);
                 g.DrawImage(healthBarFill, fillDestRect, fillSrcRect, GraphicsUnit.Pixel);
             }
