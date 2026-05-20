@@ -136,7 +136,7 @@ namespace FadePlanet
             return Path.GetFullPath(Path.Combine(Application.StartupPath, @"..\..\"));
         }
 
-        public void LoadImages()
+        public virtual void LoadImages()
         {
             try
             {
@@ -155,9 +155,9 @@ namespace FadePlanet
         // =====================================================================
         // UPDATE
         // =====================================================================
-        public void Update(Player player)
+        public virtual void Update(Player player)
         {
-            // Decrement stun duration
+            if (stunRemaining > 0)stun duration
             if (stunRemaining > 0)
             {
                 stunRemaining -= 16; // ~16ms per frame at 60fps
@@ -414,7 +414,7 @@ namespace FadePlanet
             GameManager.DespawnObject(this);
         }
 
-        public void ApplyStun(int durationMs)
+        public virtual void ApplyStun(int durationMs)
         {
             stunRemaining = durationMs;
             State = EnemyState.Stunned;

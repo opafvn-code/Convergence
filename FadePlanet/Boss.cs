@@ -74,7 +74,7 @@ namespace FadePlanet
             return Path.GetFullPath(Path.Combine(Application.StartupPath, @"..\..\"));
         }
 
-        private void LoadImages()
+        public override void LoadImages()
         {
             try
             {
