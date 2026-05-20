@@ -17,7 +17,8 @@ namespace FadePlanet
         OldMan,
         Player,
         Item,
-        Projectile
+        Projectile,
+        Friendly
     }
 
     public enum ObjectState

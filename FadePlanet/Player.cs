@@ -518,20 +518,17 @@ namespace FadePlanet
 
                     foreach (WorldObject obj in enemyObjects)
                     {
-                        Enemy enemy = obj as Enemy;
-                        if (enemy == null) continue;
-
-                        if (BarrierHitbox.IntersectsWith(enemy.Bounds))
+                        if (BarrierHitbox.IntersectsWith(obj.Bounds))
                         {
                             // Check if it's a boss - only damage in final phase
-                            if (enemy is Boss boss)
+                            if (obj is Boss boss)
                             {
                                 if (boss.CurrentPhase == BossPhase.Final)
                                 {
                                     boss.TakeDamage(RockBarrierDamage);
                                 }
                             }
-                            else
+                            else if (obj is Enemy enemy)
                             {
                                 enemy.TakeDamage(RockBarrierDamage, attackSource, RockBarrierKnockbackDistance);
                             }
@@ -568,20 +565,17 @@ namespace FadePlanet
 
                     foreach (WorldObject obj in enemyObjects)
                     {
-                        Enemy enemy = obj as Enemy;
-                        if (enemy == null) continue;
-
-                        if (SwordHitbox.IntersectsWith(enemy.Bounds))
+                        if (SwordHitbox.IntersectsWith(obj.Bounds))
                         {
                             // Check if it's a boss - only damage in final phase
-                            if (enemy is Boss boss)
+                            if (obj is Boss boss)
                             {
                                 if (boss.CurrentPhase == BossPhase.Final)
                                 {
                                     boss.TakeDamage(SwordDamage);
                                 }
                             }
-                            else
+                            else if (obj is Enemy enemy)
                             {
                                 enemy.TakeDamage(SwordDamage, attackSource);
                             }

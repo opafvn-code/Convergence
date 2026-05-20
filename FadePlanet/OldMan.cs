@@ -35,7 +35,7 @@ namespace FadePlanet
         );
         #endregion
 
-        public OldMan(PointF pos, SizeF size, ObjectType type = ObjectType.OldMan) : base(pos, size, type)
+        public OldMan(PointF pos, SizeF size, ObjectType type = ObjectType.Friendly) : base(pos, size, type)
         {
             LoadImage();
         }

@@ -54,8 +54,11 @@ namespace FadePlanet
                 staminaBar = Image.FromFile(Path.Combine(basePath, @"Graphics\UI\StaminaBar.png"));
                 inventorySlots = Image.FromFile(Path.Combine(basePath, @"Graphics\UI\Inventory Slots.png"));
 
-                foreach (Enemy e in GetObjectsByType(ObjectType.Enemy))
-                    e.LoadImages();
+                foreach (WorldObject e in GetObjectsByType(ObjectType.Enemy))
+                {
+                    if (e is Enemy en) en.LoadImages();
+                    // Boss loads its own images in constructor
+                }
             }
             catch (Exception ex)
             {
@@ -144,14 +147,15 @@ namespace FadePlanet
                 return true;
             });
 
-            foreach (Enemy en in GetObjectsByType(ObjectType.Enemy))
+            foreach (WorldObject obj in GetObjectsByType(ObjectType.Enemy))
             {
-                en.Update(CurPlayer);
-
-                // Update boss separately if it's a Boss instance
-                if (en is Boss boss)
+                if (obj is Boss boss)
                 {
                     boss.Update(CurPlayer);
+                }
+                else if (obj is Enemy en)
+                {
+                    en.Update(CurPlayer);
                 }
             }
 
@@ -257,7 +261,7 @@ namespace FadePlanet
             DrawObjectType(e.Graphics, ObjectType.Item);
 
             // Draw all enemies
-            foreach (Enemy en in GetObjectsByType(ObjectType.Enemy))
+            foreach (WorldObject en in GetObjectsByType(ObjectType.Enemy))
                 en.Draw(e.Graphics);
 
             // Draw all projectiles

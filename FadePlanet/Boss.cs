@@ -12,8 +12,8 @@ namespace FadePlanet
     internal class Boss : WorldObject
     {
         #region Boss Stats
-        private new const int MaxHealth = 2000;
-        public new int Health { get; private set; } = MaxHealth;
+        private const int MaxHealth = 2000;
+        public int Health { get; private set; } = MaxHealth;
         private const int EnemiesPerPhase = 10;
         private int EnemiesDefeatedInPhase = 0;
 
@@ -73,7 +73,7 @@ namespace FadePlanet
             return Path.GetFullPath(Path.Combine(Application.StartupPath, @"..\..\"));
         }
 
-        private new void LoadImages()
+        private void LoadImages()
         {
             try
             {
@@ -88,7 +88,7 @@ namespace FadePlanet
             }
         }
 
-        public new void Update(Player player)
+        public void Update(Player player)
         {
             // Boss is stationary - no movement
 
@@ -278,7 +278,7 @@ namespace FadePlanet
             }
         }
 
-        public new void ApplyStun(int durationMs)
+        public void ApplyStun(int durationMs)
         {
             stunTimer = durationMs;
         }
@@ -289,7 +289,7 @@ namespace FadePlanet
             // Do nothing - boss is stationary
         }
 
-        public new void OnDeath()
+        public override void OnDeath()
         {
             GameManager.CurPlayer.AddCurrency(50);
             GameManager.OnEnemyDefeated();

@@ -144,19 +144,19 @@ namespace FadePlanet
             // Check collision with enemies
             if (GameManager.AllObjects.TryGetValue(ObjectType.Enemy, out var enemyDict))
             {
-                foreach (Enemy enemy in enemyDict.Values.ToList())
+                foreach (WorldObject obj in enemyDict.Values.ToList())
                 {
-                    if (Bounds.IntersectsWith(enemy.Bounds))
+                    if (Bounds.IntersectsWith(obj.Bounds))
                     {
                         // Check if it's a boss - only damage in final phase
-                        if (enemy is Boss boss)
+                        if (obj is Boss boss)
                         {
                             if (boss.CurrentPhase == BossPhase.Final)
                             {
                                 boss.TakeDamage(ProjectileDamage);
                             }
                         }
-                        else
+                        else if (obj is Enemy enemy)
                         {
                             enemy.TakeDamage(ProjectileDamage, Position);
                         }

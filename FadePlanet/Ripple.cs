@@ -70,26 +70,29 @@ namespace FadePlanet
         {
             if (GameManager.AllObjects.TryGetValue(ObjectType.Enemy, out var enemyDict))
             {
-                foreach (Enemy enemy in enemyDict.Values.ToList())
+                foreach (WorldObject obj in enemyDict.Values.ToList())
                 {
-                    if (enemy is Boss) continue;
-                    float dx = enemy.Position.X + 48f - Position.X;
-                    float dy = enemy.Position.Y + 48f - Position.Y;
-                    float distanceToEnemy = (float)Math.Sqrt(dx * dx + dy * dy);
-
-                    // Check if enemy is within the current ripple radius
-                    if (distanceToEnemy <= CurrentRadius && distanceToEnemy > (CurrentRadius - ExpandSpeed * 2))
+                    if (obj is Boss) continue;
+                    if (obj is Enemy enemy)
                     {
-                        // Apply horizontal knockback away from ripple center
-                        float horizontalDir = Math.Abs(dx) < 0.01f ? 1f : Math.Sign(dx);
+                        float dx = enemy.Position.X + 48f - Position.X;
+                        float dy = enemy.Position.Y + 48f - Position.Y;
+                        float distanceToEnemy = (float)Math.Sqrt(dx * dx + dy * dy);
 
-                        enemy.Position = new PointF(
-                            enemy.Position.X + horizontalDir * KnockbackDistance,
-                            enemy.Position.Y
-                        );
+                        // Check if enemy is within the current ripple radius
+                        if (distanceToEnemy <= CurrentRadius && distanceToEnemy > (CurrentRadius - ExpandSpeed * 2))
+                        {
+                            // Apply horizontal knockback away from ripple center
+                            float horizontalDir = Math.Abs(dx) < 0.01f ? 1f : Math.Sign(dx);
 
-                        // Apply stun
-                        enemy.ApplyStun(StunDurationMs);
+                            enemy.Position = new PointF(
+                                enemy.Position.X + horizontalDir * KnockbackDistance,
+                                enemy.Position.Y
+                            );
+
+                            // Apply stun
+                            enemy.ApplyStun(StunDurationMs);
+                        }
                     }
                 }
             }

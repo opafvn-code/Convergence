@@ -414,7 +414,7 @@ namespace FadePlanet
             State = EnemyState.Knockback;
         }
 
-        public new void OnDeath()
+        public override void OnDeath()
         {
             GameManager.CurPlayer.AddCurrency(1);
             GameManager.OnEnemyDefeated();
