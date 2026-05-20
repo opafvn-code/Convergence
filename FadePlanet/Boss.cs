@@ -280,7 +280,7 @@ namespace FadePlanet
 
         public override void ApplyStun(int durationMs)
         {
-            // Boss is immune to stun
+            // Boss is immune to stun - durationMs ignored
         }
 
         public override void OnDeath()

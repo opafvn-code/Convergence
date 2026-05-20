@@ -157,7 +157,6 @@ namespace FadePlanet
         // =====================================================================
         public virtual void Update(Player player)
         {
-            if (stunRemaining > 0)stun duration
             if (stunRemaining > 0)
             {
                 stunRemaining -= 16; // ~16ms per frame at 60fps
