@@ -49,7 +49,6 @@ namespace FadePlanet
         // Attack timers
         private int attackTimer = 0;
         private const int AttackInterval = 2000; // 2 seconds between attacks
-        private int stunTimer = 0;
         #endregion
 
         #region Health Bar Graphics
